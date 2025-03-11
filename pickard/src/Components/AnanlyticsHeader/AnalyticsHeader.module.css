@@ -1,0 +1,24 @@
+.header_box_main_div {
+  background-color: #ffff;
+  padding: 60px 105px 180px 105px;
+}
+
+.header_box {
+  width: 90%;
+}
+
+.header_heading {
+  background-color: #52682d;
+  width: 90%;
+}
+
+.analyticsHeader_heading {
+  font-size: 24px;
+  background-color: #758757;
+  padding: 15px 10px;
+}
+
+.date_box {
+  background-color: #52682d;
+  padding: 15px 10px;
+}

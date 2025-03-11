@@ -1,0 +1,42 @@
+.page_view {
+  width: 90%;
+  background-color: #fafafa;
+  position: relative;
+  top: -200px;
+  padding: 80px 42px 100px 42px;
+}
+
+.page_view_data {
+  background-color: #ffff;
+  padding-bottom: 1px;
+}
+
+.page_view_data:hover {
+  box-shadow: 0 0 5px 0 #3649534d;
+}
+
+
+.page_view_heading {
+  background-color: #4B602B;
+  color: #fff;
+  padding: 1rem;
+  padding-left: 35px;
+}
+
+.page_view_sub_heading {
+  font-size: 12px;
+  color: #2d3e4f;
+}
+
+.path_view_path {
+  font-size: 12px;
+}
+
+.path_view_value {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.path_view_diff {
+  font-size: 12px;
+}
