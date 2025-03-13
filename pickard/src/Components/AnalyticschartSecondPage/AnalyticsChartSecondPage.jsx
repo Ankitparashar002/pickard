@@ -2,11 +2,17 @@ import React, { useRef, useState, useEffect } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import "bootstrap/dist/css/bootstrap.min.css";
-import style from "./AnalyticsChart.module.css";
+import style from "./AnalyticsChartSecondPage.module.css"; // your custom CSS module
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const AnalyticsChart = ({ startDate, endDate, title, apiEndPoint }) => {
+const AnalyticsChartSecondPage = ({
+  startDate,
+  endDate,
+  title,
+  apiEndPoint,
+  subtitle,
+}) => {
   const [queriesData, setQueriesData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -18,7 +24,6 @@ const AnalyticsChart = ({ startDate, endDate, title, apiEndPoint }) => {
   const baseUrl = "https://localhost:7050/api";
   const url = `${baseUrl}/${apiEndPoint.apiurl}/${apiEndPoint.url}?StartDate=${formattedStart}&EndDate=${formattedEnd}`;
 
-  // Fetch data when component mounts or dates change
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -37,7 +42,7 @@ const AnalyticsChart = ({ startDate, endDate, title, apiEndPoint }) => {
             })
           );
 
-          // Sort data in descending order (largest to smallest clicks)
+          // Sort data in descending order
           formattedData.sort((a, b) => b.clicks - a.clicks);
 
           // Retrieve colors from CSS variables
@@ -77,7 +82,7 @@ const AnalyticsChart = ({ startDate, endDate, title, apiEndPoint }) => {
           // Assign colors AFTER sorting
           formattedData = formattedData.map((item, index) => ({
             ...item,
-            color: colorVariables[index % colorVariables.length], // Cycle through colors
+            color: colorVariables[index % colorVariables.length],
           }));
 
           setQueriesData(formattedData);
@@ -94,7 +99,6 @@ const AnalyticsChart = ({ startDate, endDate, title, apiEndPoint }) => {
     fetchData();
   }, [url, formattedStart, formattedEnd]);
 
-  // Calculate total clicks
   const totalClicks = queriesData.reduce((sum, item) => sum + item.clicks, 0);
 
   // State to highlight the active table row
@@ -112,7 +116,7 @@ const AnalyticsChart = ({ startDate, endDate, title, apiEndPoint }) => {
     ],
   };
 
-  // Chart options including custom tooltip callback and onHover event
+  // Chart options
   const chartOptions = {
     responsive: true,
     cutout: "50%", // donut hole
@@ -126,7 +130,7 @@ const AnalyticsChart = ({ startDate, endDate, title, apiEndPoint }) => {
     },
     plugins: {
       legend: {
-        display: false, // we'll use our table as the legend
+        display: false,
       },
       tooltip: {
         enabled: true,
@@ -147,16 +151,14 @@ const AnalyticsChart = ({ startDate, endDate, title, apiEndPoint }) => {
   // Reference to the Chart.js instance
   const chartRef = useRef(null);
 
-  // Handler when hovering over a table row
+  // Hover handlers for table rows
   const handleMouseEnterLabel = (dataIndex) => {
     if (!chartRef.current) return;
     const chart = chartRef.current;
 
-    // Get the slice position so tooltip appears near it
     const meta = chart.getDatasetMeta(0).data[dataIndex];
     const { x, y } = meta.getProps(["x", "y"], true);
 
-    // Activate the slice and show tooltip programmatically
     chart.setActiveElements([{ datasetIndex: 0, index: dataIndex }]);
     chart.tooltip.setActiveElements([{ datasetIndex: 0, index: dataIndex }], {
       x,
@@ -164,52 +166,40 @@ const AnalyticsChart = ({ startDate, endDate, title, apiEndPoint }) => {
     });
     chart.update();
 
-    // Highlight the table row
     setActiveRow(dataIndex);
   };
 
-  // Handler when mouse leaves a table row
   const handleMouseLeaveLabel = () => {
     if (!chartRef.current) return;
     const chart = chartRef.current;
 
-    // Clear active elements and tooltip
     chart.setActiveElements([]);
     chart.tooltip.setActiveElements([]);
     chart.update();
 
-    // Remove table row highlight
     setActiveRow(null);
   };
 
-  // Render loading, error, or chart
   if (loading) {
     return <div>Loading...</div>;
   }
-
   if (error) {
     return <div>Error: {error}</div>;
   }
   if (!queriesData.length) return <p style={{ margin: "0px" }}></p>;
-  return (
-    <div className={`container  ${style.analytic_chart}`}>
-      {apiEndPoint.id === 1 ? (
-        <div className={`${style.table_heading} mb-3`}>
-          {" "}
-          <h4 className="mb-0">PAGE QUERIES</h4>{" "}
-        </div>
-      ) : null}
 
+  return (
+    <div className={`container ${style.analyticsCard}`}>
       <div className="container">
-        <div className={`${style.analytic_Table} row `}>
-          <p
-            className={`text-muted mt-3 m-0 ${style.analytic_Table_sub_heading}`}
-          >
+        <div className={`${style.analyticsCard_table} row`}>
+          <h5 className={` ${style.analyticsCard_title}`}>
             {title.toUpperCase()}
-          </p>
-          {/* Left column: Donut Chart */}
-          <div className="col-md-3 d-flex justify-content-center align-items-center">
-            <div style={{ width: "170px", height: "170px" }}>
+          </h5>
+          {/* Donut Chart */}
+          <div
+            className={`${style.doughnut_chart} col-md-5 d-flex justify-content-center `}
+          >
+            <div style={{ width: "150px", height: "150px" }}>
               <Doughnut
                 ref={chartRef}
                 data={chartData}
@@ -217,14 +207,15 @@ const AnalyticsChart = ({ startDate, endDate, title, apiEndPoint }) => {
               />
             </div>
           </div>
-          {/* Right column: Table */}
 
-          <div className="col-md-9 mainDiv">
-            <table className="table table-striped align-middle">
+          {/* Table */}
+          <div className={`${style.chart_data} col-md-7`}>
+            <table className="table table-borderless table-striped table-sm mb-0">
               <thead>
                 <tr>
-                  <th className="w-50 border-bottom-0">Queries</th>
-                  <th className="w-50 text-end border-bottom-0">Clicks</th>
+                  <th className={`${style.item_label}`}>
+                    {queriesData.length > 0 ? title : "Label"}
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -239,7 +230,7 @@ const AnalyticsChart = ({ startDate, endDate, title, apiEndPoint }) => {
                       onMouseLeave={handleMouseLeaveLabel}
                       className={activeRow === idx ? "table-primary" : ""}
                     >
-                      <td className="p-0 border-bottom-0 ps-2">
+                      <td className={`${style.AnalyticsChartSecondPage_data}`}>
                         <span
                           style={{
                             display: "inline-block",
@@ -248,20 +239,15 @@ const AnalyticsChart = ({ startDate, endDate, title, apiEndPoint }) => {
                             borderRadius: "50%",
                             backgroundColor: item.color,
                             marginRight: "8px",
-                            fontSize: "12px",
                           }}
-                        ></span>
-                        <span className={`${style.item_label}`}>
+                        />
+                        <span className={`${style.item_label_data}`}>
                           {item.label}
                         </span>
                       </td>
+
                       <td
-                        className={`${style.item_clicks} p-0 pe-5 border-bottom-0`}
-                      >
-                        {item.clicks}
-                      </td>
-                      <td
-                        className={`${style.item_percentage} p-0 border-bottom-0`}
+                        className={`${style.item_percentage} p-0 border-bottom-0 text-end`}
                       >
                         {percentage}%
                       </td>
@@ -269,20 +255,6 @@ const AnalyticsChart = ({ startDate, endDate, title, apiEndPoint }) => {
                   );
                 })}
               </tbody>
-              <tfoot>
-                <tr>
-                  <th
-                    className={`${style.item_total_label} border-bottom-0 p-0 ps-4`}
-                  >
-                    Total
-                  </th>
-                  <th
-                    className={`${style.item_total} p-0 text-end pe-5 border-bottom-0`}
-                  >
-                    {totalClicks}
-                  </th>
-                </tr>
-              </tfoot>
             </table>
           </div>
         </div>
@@ -291,4 +263,4 @@ const AnalyticsChart = ({ startDate, endDate, title, apiEndPoint }) => {
   );
 };
 
-export default AnalyticsChart;
+export default AnalyticsChartSecondPage;

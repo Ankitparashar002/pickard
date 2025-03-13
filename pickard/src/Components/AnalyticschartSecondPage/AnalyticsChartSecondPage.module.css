@@ -1,0 +1,61 @@
+.analyticsCard {
+  padding: 0px;
+}
+
+.analyticsCard_table {
+  background-color: #ffffff;
+
+  padding: 10px 4px 10px 4px;
+}
+
+.analyticsCard_table:hover {
+  box-shadow: 0 0 5px 0 #3649534d;
+}
+
+/* .chart_data {
+  height: 200px;
+} */
+
+
+.table_heading {
+  background-color: #4B602B;
+  color: #fff;
+  padding: 1rem;
+  padding-left: 35px;
+}
+
+.AnalyticsChartSecondPage_data {
+  padding: 0px !important;
+  padding-left: 14px !important;
+}
+
+.doughnut_chart {
+  padding: 35px 35px 0px 35px;
+}
+
+.analyticsCard_title {
+  font-size: 12px;
+  color: #2d3e4f;
+  letter-spacing: 0.684px;
+}
+
+.analyticsCard .card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.item_label {
+  font-size: 12px;
+}
+
+.item_percentage {
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.item_label_data {
+  font-size: 12px;
+  color: #364953;
+  letter-spacing: 0.6px;
+}
