@@ -5,6 +5,8 @@ import apiEndpointsTwo from "./apiEndpointsTwo";
 import AnalyticsChartSecondPage from "../AnalyticschartSecondPage/AnalyticsChartSecondPage";
 import AnalyticsHeader from "../AnanlyticsHeader/AnalyticsHeader";
 import style from "./SecondView.module.css";
+import OrganicContentPage from "../OrganicContentPage/OrganicContentPage";
+import apiOrganicContent from "../SecondView/apiOrganicContent";
 
 function SecondView() {
   const [startDate, setStartDate] = useState(
@@ -80,6 +82,25 @@ function SecondView() {
                 endDate={endDate}
                 title={api.title}
                 subtitle={api.subtitle}
+              />
+            </Col>
+          ))}
+        </Row>
+
+        <div className={`${style.table_heading} `}>
+          {" "}
+          <h4 className="mb-0">Organic Content Intrests</h4>{" "}
+        </div>
+        <Row className="mt-3">
+          {apiOrganicContent.map((api) => (
+            <Col md={6} className="mb-3">
+              <OrganicContentPage
+                key={api.id}
+                id={api.id}
+                apiOrganicContent={api}
+                title={api.title}
+                startDate={startDate}
+                endDate={endDate}
               />
             </Col>
           ))}
