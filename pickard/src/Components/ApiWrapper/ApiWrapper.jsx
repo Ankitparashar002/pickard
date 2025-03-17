@@ -26,6 +26,7 @@ function ApiWrapper() {
         startDate={startDate}
         endDate={endDate}
         onDateChange={handleDateChange}
+        title="ANALYTICS LANDING PAGE"
       />
       <Container className="p-4">
         {/* Page Queries Section */}

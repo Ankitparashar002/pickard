@@ -7,6 +7,9 @@ import AnalyticsHeader from "../AnanlyticsHeader/AnalyticsHeader";
 import style from "./SecondView.module.css";
 import OrganicContentPage from "../OrganicContentPage/OrganicContentPage";
 import apiOrganicContent from "../SecondView/apiOrganicContent";
+import TrafficCard from "../TrafficCard/TrafficCard";
+import apiEnagagementReport from "./apiEnagagementReport";
+import apiRetention from "./apiRetention";
 
 function SecondView() {
   const [startDate, setStartDate] = useState(
@@ -24,6 +27,7 @@ function SecondView() {
   return (
     <>
       <AnalyticsHeader
+        title="ANALYTICS"
         startDate={startDate}
         endDate={endDate}
         onDateChange={handleDateChange}
@@ -38,6 +42,40 @@ function SecondView() {
           paddingRight: "30px",
         }}
       >
+        <div className={`${style.table_heading} `}>
+          {" "}
+          <h4 className="mb-0">ENGAGEMENT</h4>{" "}
+        </div>
+        <Row className="mt-3">
+          {apiEnagagementReport.map((api) => (
+            <Col md={3} className="mb-3" key={api.id}>
+              <TrafficCard
+                startDate={startDate}
+                endDate={endDate}
+                apiEnagagementReport={api}
+                title={api.title}
+              />
+            </Col>
+          ))}
+        </Row>
+
+        <div className={`${style.table_heading} `}>
+          {" "}
+          <h4 className="mb-0">RETENTION</h4>{" "}
+        </div>
+        <Row className="mt-3">
+          {apiRetention.map((api) => (
+            <Col md={3} className="mb-3" key={api.id}>
+              <TrafficCard
+                startDate={startDate}
+                endDate={endDate}
+                apiEnagagementReport={api}
+                title={api.title}
+              />
+            </Col>
+          ))}
+        </Row>
+
         <div className={`${style.table_heading} `}>
           {" "}
           <h4 className="mb-0">USERS</h4>{" "}

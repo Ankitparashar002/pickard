@@ -2,9 +2,11 @@ import React from "react";
 import style from "./AnalyticsHeader.module.css";
 import DateRangePicker from "../DatePicker/DatePicker";
 
-const AnalyticsHeader = ({ startDate, endDate, onDateChange }) => {
+const AnalyticsHeader = ({ startDate, endDate, onDateChange, title }) => {
   return (
-    <div className={`${style.header_box_main_div} d-flex justify-content-center `}>
+    <div
+      className={`${style.header_box_main_div} d-flex justify-content-center `}
+    >
       {/* Top Navigation/Header */}
       <nav className={`${style.header_box}`}>
         <div className="container d-flex justify-content-between align-items-center">
@@ -37,7 +39,7 @@ const AnalyticsHeader = ({ startDate, endDate, onDateChange }) => {
               <h1
                 className={`${style.analyticsHeader_heading} col-md-12 text-white`}
               >
-                EA Technologies - ANALYTICS LANDING PAGES
+                EA TECHNOLOGIES - {title}
               </h1>
             </div>
           </div>
