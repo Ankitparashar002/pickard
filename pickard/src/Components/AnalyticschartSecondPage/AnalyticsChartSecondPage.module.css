@@ -59,3 +59,41 @@
   color: #364953;
   letter-spacing: 0.6px;
 }
+
+
+.loaderContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #53682d;
+  border-radius: 50%;
+  width: 23px;
+  height: 23px;
+  animation: spin 0.7s linear infinite;
+  margin-bottom: 8px;
+}
+
+.acquiringText {
+  font-size: 14px;
+  color: #5a6f7f;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  margin: 0;
+  padding: 0;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

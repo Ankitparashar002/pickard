@@ -2,11 +2,16 @@ import React, { useRef, useState, useEffect } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import "bootstrap/dist/css/bootstrap.min.css";
-import style from "./AnalyticsChart.module.css";
+import style from "./AnalyticsChartThirdPage.module.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const AnalyticsChart = ({ startDate, endDate, title, apiEndPoint }) => {
+const AnalyticsChartThirdPage = ({
+  startDate,
+  endDate,
+  title,
+  apiEndPoint,
+}) => {
   const [queriesData, setQueriesData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -18,7 +23,6 @@ const AnalyticsChart = ({ startDate, endDate, title, apiEndPoint }) => {
   const baseUrl = "https://localhost:7050/api";
   const url = `${baseUrl}/${apiEndPoint.apiurl}/${apiEndPoint.url}?StartDate=${formattedStart}&EndDate=${formattedEnd}`;
 
-  // Fetch data when component mounts or dates change
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -30,14 +34,35 @@ const AnalyticsChart = ({ startDate, endDate, title, apiEndPoint }) => {
         const result = await response.json();
 
         if (result.success) {
-          let formattedData = Object.entries(result.data).map(
-            ([label, clicks]) => ({
-              label,
-              clicks: parseInt(clicks, 10),
-            })
-          );
+          let formattedData = [];
+          // Handle the case when data is an array
+          if (Array.isArray(result.data)) {
+            formattedData = result.data.map((item) => {
+              // Check if item contains expected keys (e.g. channelGroup and sessions)
+              if (item.channelGroup && item.sessions !== undefined) {
+                return {
+                  label: item.channelGroup,
+                  clicks: parseInt(item.sessions, 10),
+                };
+              } else {
+                // Fallback: use first key/value from the object
+                const key = Object.keys(item)[0];
+                return {
+                  label: key,
+                  clicks: parseInt(item[key], 10),
+                };
+              }
+            });
+          }
+          // Handle the case when data is an object (key/value pairs)
+          else if (typeof result.data === "object" && result.data !== null) {
+            formattedData = Object.entries(result.data).map(([key, value]) => ({
+              label: key,
+              clicks: parseInt(value, 10),
+            }));
+          }
 
-          // Sort data in descending order (largest to smallest clicks)
+          // Sort the data in descending order by clicks
           formattedData.sort((a, b) => b.clicks - a.clicks);
 
           // Retrieve colors from CSS variables
@@ -74,10 +99,10 @@ const AnalyticsChart = ({ startDate, endDate, title, apiEndPoint }) => {
               .trim(),
           ];
 
-          // Assign colors AFTER sorting
+          // Assign colors after sorting so that the largest values get the first colors
           formattedData = formattedData.map((item, index) => ({
             ...item,
-            color: colorVariables[index % colorVariables.length], // Cycle through colors
+            color: colorVariables[index % colorVariables.length],
           }));
 
           setQueriesData(formattedData);
@@ -196,17 +221,11 @@ const AnalyticsChart = ({ startDate, endDate, title, apiEndPoint }) => {
     return <div>Error: {error}</div>;
   }
   if (!queriesData.length) return <p style={{ margin: "0px" }}></p>;
-  return (
-    <div className={`container  ${style.analytic_chart}`}>
-      {apiEndPoint.id === 1 ? (
-        <div className={`${style.table_heading} mb-3`}>
-          {" "}
-          <h4 className="mb-0">PAGE QUERIES</h4>{" "}
-        </div>
-      ) : null}
 
+  return (
+    <div className={`container ${style.analytic_chart}`}>
       <div className="container">
-        <div className={`${style.analytic_Table} row `}>
+        <div className={`${style.analytic_Table} row`}>
           <p
             className={`text-muted mt-3 m-0 ${style.analytic_Table_sub_heading}`}
           >
@@ -223,7 +242,6 @@ const AnalyticsChart = ({ startDate, endDate, title, apiEndPoint }) => {
             </div>
           </div>
           {/* Right column: Table */}
-
           <div className="col-md-9 mainDiv">
             <table className="table table-striped align-middle">
               <thead>
@@ -253,12 +271,9 @@ const AnalyticsChart = ({ startDate, endDate, title, apiEndPoint }) => {
                             borderRadius: "50%",
                             backgroundColor: item.color,
                             marginRight: "8px",
-                            fontSize: "12px",
                           }}
                         ></span>
-                        <span className={`${style.item_label}`}>
-                          {item.label}
-                        </span>
+                        <span className={style.item_label}>{item.label}</span>
                       </td>
                       <td
                         className={`${style.item_clicks} p-0 pe-5 border-bottom-0`}
@@ -296,4 +311,4 @@ const AnalyticsChart = ({ startDate, endDate, title, apiEndPoint }) => {
   );
 };
 
-export default AnalyticsChart;
+export default AnalyticsChartThirdPage;

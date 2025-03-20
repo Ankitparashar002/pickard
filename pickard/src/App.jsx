@@ -4,7 +4,7 @@ import ApiWrapper from "./Components/ApiWrapper/ApiWrapper";
 import SecondView from "./Components/SecondView/SecondView";
 function App() {
   return (
-    <div style={{ background: "#f0f0f0" }}>
+    <div style={{ background: "#f0f0f0", cursor: "pointer" }}>
       {/* <ApiWrapper /> */}
       <SecondView />
     </div>

@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
 import "bootstrap/dist/css/bootstrap.min.css";
-import styles from "./TrafficCard.module.css";
+import style from "./OrganicCards.module.css";
 
 Chart.register(...registerables);
 
-const TrafficCard = ({ startDate, endDate, title, apiEnagagementReport }) => {
+const OrganicCards = ({ startDate, endDate, title, apiEnagagementReport }) => {
   const [pagesData, setPagesData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -29,7 +29,6 @@ const TrafficCard = ({ startDate, endDate, title, apiEnagagementReport }) => {
         const result = await response.json();
 
         if (result.success) {
-          // Save the data from the API directly
           setPagesData(result.data);
         } else {
           throw new Error(result.message || "API returned unsuccessful");
@@ -46,9 +45,9 @@ const TrafficCard = ({ startDate, endDate, title, apiEnagagementReport }) => {
 
   if (loading) {
     return (
-      <div className={styles.loaderContainer}>
-        <div className={styles.spinner}></div>
-        <p className={styles.acquiringText}>Acquiring...</p>
+      <div className={style.loaderContainer}>
+        <div className={style.spinner}></div>
+        <p className={style.acquiringText}>Acquiring...</p>
       </div>
     );
   }
@@ -57,37 +56,18 @@ const TrafficCard = ({ startDate, endDate, title, apiEnagagementReport }) => {
     return <div>Error: {error}</div>;
   }
 
-  // Destructure the values from pagesData for clarity
-  const { current, previousPeriod, previousYear } = pagesData;
+  // Assume your API returns a `current` value for the main number
+  const { current } = pagesData;
 
-  // Function to aggregate sessions if data is an array
-  const calculateTotalSessions = (data) => {
-    if (Array.isArray(data)) {
-      return data.reduce((total, item) => total + (item.sessions || 0), 0);
-    }
-    return data;
-  };
-
-  const mainNumber = calculateTotalSessions(current);
-  const previousPeriodValue = calculateTotalSessions(previousPeriod);
-  const previousYearValue = calculateTotalSessions(previousYear);
-
-  // Determine the title to display:
-  // If API provides a channelGroup in the current data, use that as title; otherwise, use the passed in title prop.
-  const cardTitle =
-    Array.isArray(current) && current.length > 0 && current[0].channelGroup
-      ? current[0].channelGroup
-      : title;
-
-  // The chart data remains the same if you don't need to update it
+  // Example chart data; replace with real data if needed
   const data = {
     labels: ["", "", "", "", ""],
     datasets: [
       {
         label: "Sessions",
-        data: [400, 410, 400, 414, 415],
+        data: [400, 700, 400, 800, 415],
         borderColor: "#53682d",
-        backgroundColor: "rgba(62, 84, 29, 0.34)",
+        backgroundColor: "rgba(83, 104, 45, 0.3)",
         fill: true,
         tension: 0,
         borderWidth: 2,
@@ -97,6 +77,7 @@ const TrafficCard = ({ startDate, endDate, title, apiEnagagementReport }) => {
     ],
   };
 
+  // Chart options to hide axes & baseline
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -106,6 +87,13 @@ const TrafficCard = ({ startDate, endDate, title, apiEnagagementReport }) => {
     },
     plugins: {
       legend: { display: false },
+      tooltip: {
+        callbacks: {
+          title: (tooltipItems) => tooltipItems[0].label || "",
+          label: (tooltipItem) =>
+            `Sessions: ${tooltipItem.parsed.y.toLocaleString()}`,
+        },
+      },
     },
     scales: {
       y: {
@@ -132,32 +120,21 @@ const TrafficCard = ({ startDate, endDate, title, apiEnagagementReport }) => {
   };
 
   return (
-    <div className={styles.cardContainer}>
-      <div className={styles.cardBody}>
-        {/* Title: Use channelGroup from API if available; otherwise, use prop title */}
-        <p className={styles.title}>{cardTitle}</p>
+    <div className={style.cardContainer}>
+      <div className={style.cardBody}>
+        {/* Title */}
+        <p className={style.title}>{title}</p>
 
         {/* Main Number from API */}
-        <h2 className={styles.mainNumber}>{mainNumber}</h2>
+        <h2 className={style.mainNumber}>{current}</h2>
 
         {/* Mini-chart container */}
-        <div className={styles.chartContainer}>
+        <div className={style.chartContainer}>
           <Line data={data} options={options} />
-        </div>
-
-        {/* Previous info */}
-        <div className={styles.previousInfo}>
-          <span>
-            Previous period <strong>{previousPeriodValue}</strong>
-          </span>
-          <span>
-            Previous year{" "}
-            <strong className="text-end">{previousYearValue}</strong>
-          </span>
         </div>
       </div>
     </div>
   );
 };
 
-export default TrafficCard;
+export default OrganicCards;

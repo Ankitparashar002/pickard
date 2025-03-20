@@ -35,16 +35,28 @@ const OrganicContentPage = ({
         const result = await response.json();
 
         if (result.success) {
-          // Transform API object to an array of objects
-          let formattedData = Object.entries(result.data).map(
-            ([label, clicks]) => ({
-              label,
-              clicks: parseInt(clicks, 10),
-            })
-          );
+          // Dynamically check for a nested object where every value can be parsed as a number.
+          let rawData = result.data;
+          for (const key in result.data) {
+            const value = result.data[key];
+            if (
+              typeof value === "object" &&
+              value !== null &&
+              Object.values(value).every((v) => !isNaN(parseInt(v, 10)))
+            ) {
+              rawData = value;
+              break;
+            }
+          }
 
-          // Sort the data in descending order by clicks
-          formattedData.sort((a, b) => b.clicks - a.clicks);
+          // Transform the API object to an array of objects with label and click
+          let formattedData = Object.entries(rawData).map(([label, value]) => ({
+            label,
+            click: parseInt(value, 10),
+          }));
+
+          // Sort data in descending order by click count
+          formattedData.sort((a, b) => b.click - a.click);
 
           // Retrieve colors from CSS variables
           const colorVariables = [
@@ -101,19 +113,25 @@ const OrganicContentPage = ({
   }, [url, formattedStart, formattedEnd]);
 
   if (loading) {
-    return <div>Loading data...</div>;
+    return (
+      <div className={style.loaderContainer}>
+        <div className={style.spinner}></div>
+        <p className={style.acquiringText}>Acquiring...</p>
+      </div>
+    );
   }
+
 
   if (error) {
     return <div>Error: {error}</div>;
   }
 
-  // Calculate the maximum clicks value to determine progress width
-  const maxClicks = Math.max(...queriesData.map((item) => item.clicks));
+  // Calculate the total clicks to derive percentages
+  const totalClicks = queriesData.reduce((acc, item) => acc + item.click, 0);
 
   return (
     <div className={`${style.Orgnaic_content_box}`}>
-      <h5 className={` ${style.Organic_Content_data_title}`}>
+      <h5 className={`${style.Organic_Content_data_title}`}>
         {title.toUpperCase()}
       </h5>
       <table
@@ -123,13 +141,14 @@ const OrganicContentPage = ({
         <thead>
           <tr>
             <th style={{ fontSize: "13px" }}>Page</th>
-            <th>Clicks</th>
+            <th>Percentage</th>
           </tr>
         </thead>
         <tbody>
           {queriesData.map((item, index) => {
-            const progressWidth = (item.clicks / maxClicks) * 100;
-
+            // Calculate the percentage of this click value relative to total clicks
+            const percentage =
+              totalClicks > 0 ? (item.click / totalClicks) * 100 : 0;
             return (
               <tr
                 key={index}
@@ -156,26 +175,21 @@ const OrganicContentPage = ({
                 <td className={`${style.progress_bar}`}>
                   <div className="d-flex align-items-center">
                     <span style={{ marginRight: "10px", minWidth: "30px" }}>
-                      {item.clicks}
+                      {percentage.toFixed(1)}%
                     </span>
                     <div
                       className="progress"
-                      style={{
-                        flexGrow: 1,
-                        height: "6px",
-                        borderRadius: "0",
-                        "--bs-progress-bg": "transparent",
-                      }}
+                      style={{ flexGrow: 1, height: "6px", borderRadius: "0" }}
                     >
                       <div
                         className="progress-bar"
                         role="progressbar"
                         style={{
-                          width: `${progressWidth}%`,
+                          width: `${percentage}%`,
                           backgroundColor: "#53682d",
                           borderRadius: 0,
                         }}
-                        aria-valuenow={progressWidth}
+                        aria-valuenow={percentage}
                         aria-valuemin="0"
                         aria-valuemax="100"
                       ></div>

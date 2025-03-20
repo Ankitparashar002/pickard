@@ -3,4 +3,16 @@
   color: #fff;
   padding: 1rem;
   padding-left: 35px;
+
+}
+
+.table_heading h4 {
+  font-size: 18px;
+  line-height: 27px;
+  letter-spacing: 0.684px;
+  text-transform: uppercase;
+}
+
+.direct_section_progress_card {
+  min-width: 401px;
 }

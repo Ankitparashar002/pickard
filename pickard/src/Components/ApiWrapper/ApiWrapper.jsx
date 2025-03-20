@@ -28,7 +28,7 @@ function ApiWrapper() {
         onDateChange={handleDateChange}
         title="ANALYTICS LANDING PAGE"
       />
-      <Container className="p-4">
+      <Container className="p-5">
         {/* Page Queries Section */}
         <Row className="mt-5">
           <Col md={12}>

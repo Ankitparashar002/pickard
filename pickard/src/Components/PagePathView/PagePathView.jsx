@@ -47,7 +47,12 @@ function PagePathView({ startDate, endDate }) {
   }, [url]); // Re-fetch if the URL changes (i.e., startDate or endDate changes)
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className={style.loaderContainer}>
+        <div className={style.spinner}></div>
+        <p className={style.acquiringText}>Acquiring...</p>
+      </div>
+    );
   }
 
   if (error) {
