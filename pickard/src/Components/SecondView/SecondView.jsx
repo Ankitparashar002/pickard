@@ -11,13 +11,13 @@ import TrafficCard from "../TrafficCard/TrafficCard";
 import apiEnagagementReport from "./apiEnagagementReport.js";
 import apiRetention from "./apiRetention";
 import AnanlyticsGraph from "../AnanlyticsGraph/AnanlyticsGraph";
-import apiDirectEngagementRate from "./apiDirectEagagementRate";
 import OrganicCards from "../OrganicCards/OrganicCards.jsx";
 import AnalyticsChartThirdPage from "../AnalyticsChartThirdPage/AnalyticsChartThirdPage.jsx";
 import { apiDirectHourDayOfWeek } from "./apiDirect.js";
 import {
   apiReferralSources,
   apiReferralEngagementRate,
+  apiReferralSessionPerUSer,
 } from "./apiReferral.js";
 import {
   apiAcquisitioncards,
@@ -28,6 +28,7 @@ import {
   apiDirectGetSessionsPerUser,
   apiDirectGetEngagementRate,
 } from "./apiOrganicSearchSources.js";
+import { apiHomePageQueries } from "./apiHomePageQueries.js";
 
 function SecondView() {
   const [startDate, setStartDate] = useState(
@@ -224,7 +225,7 @@ function SecondView() {
               url="GetReferralTrafficTrend"
             />
           </Col>
-          {apiDirectEngagementRate.map((api) => (
+          {apiReferralEngagementRate.map((api) => (
             <Col md={3} className="mb-3" key={api.id}>
               <TrafficCard
                 startDate={startDate}
@@ -248,7 +249,7 @@ function SecondView() {
               />
             </Col>
           ))}
-          {apiDirectEngagementRate.map((api) => (
+          {apiReferralSessionPerUSer.map((api) => (
             <Col md={2} className="mb-3" key={api.id}>
               <TrafficCard
                 startDate={startDate}
@@ -362,6 +363,27 @@ function SecondView() {
           ))}
         </Row>
         {/* Organic Content Section end */}
+
+        {/* Home Page Queries Section start */}
+        <div className={`${style.table_heading} `}>
+          {" "}
+          <h4 className="mb-0">Home Page Queries</h4>{" "}
+        </div>
+        <Row className="mt-3">
+          {apiHomePageQueries.map((api) => (
+            <Col md={12} className="mb-2">
+              <AnalyticsChartThirdPage
+                key={api.id}
+                id={api.id}
+                apiEndPoint={api}
+                startDate={startDate}
+                endDate={endDate}
+                title={api.title}
+              />
+            </Col>
+          ))}
+        </Row>
+        {/* Home Page Queries Section end */}
 
         {/* Last Section start */}
         <Row className="mt-3">

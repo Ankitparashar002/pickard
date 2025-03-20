@@ -192,9 +192,6 @@ const AnalyticsChart = ({ startDate, endDate, title, apiEndPoint }) => {
     );
   }
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
   if (!queriesData.length) return <p style={{ margin: "0px" }}></p>;
   return (
     <div className={`container  ${style.analytic_chart}`}>

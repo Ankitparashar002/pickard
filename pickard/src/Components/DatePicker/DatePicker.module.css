@@ -1,18 +1,13 @@
-.date-range-picker-modal {
-  position: absolute;
-  top: 40px;
-  left: 0;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  width: 320px;
-  padding: 15px;
-  z-index: 1000;
+.date_range_picker_modal {
+  padding: 0;
+  width: 410px;
+  border-radius: 0px;
+  top: 38px;
 }
 
-.section {
-  margin-bottom: 15px;
+.modal_header {
+  padding: 25px;
+  background-color: rgb(248, 248, 250);
 }
 
 .label {
@@ -36,29 +31,33 @@
   font-size: 14px;
 }
 
-.button-container {
+.button_container {
   display: flex;
   justify-content: space-between;
+  padding: 20px;
 }
 
-.cancel-button {
-  padding: 8px 16px;
+.cancel_button {
+  padding: 4px 9px;
   background: white;
   border: 1px solid #333;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
+  border-radius: 2px;
+  font-size: 10.75px;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 400;
 }
 
-.view-button {
-  padding: 8px 16px;
+.view_period_button {
+  padding: 4px 9px;
+  color: #364953;
   background: #f0f0f0;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
+  font-weight: 400;
+  border-radius: 2px;
+  font-size: 13.68px;
   text-transform: uppercase;
+  letter-spacing: 0.684px;
 }
 
 .react-datepicker {

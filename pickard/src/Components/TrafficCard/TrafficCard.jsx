@@ -53,10 +53,6 @@ const TrafficCard = ({ startDate, endDate, title, apiEnagagementReport }) => {
     );
   }
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
   // Destructure the values from pagesData for clarity
   const { current, previousPeriod, previousYear } = pagesData;
 

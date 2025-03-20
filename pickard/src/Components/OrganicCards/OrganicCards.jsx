@@ -52,10 +52,6 @@ const OrganicCards = ({ startDate, endDate, title, apiEnagagementReport }) => {
     );
   }
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
   // Assume your API returns a `current` value for the main number
   const { current } = pagesData;
 

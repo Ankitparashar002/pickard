@@ -55,10 +55,6 @@ function PagePathView({ startDate, endDate }) {
     );
   }
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
   return (
     <div className={`${style.page_view} container`}>
       <div className={`${style.page_view_heading}`}>

@@ -188,9 +188,6 @@ const AnalyticsChartSecondPage = ({
     );
   }
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
   if (!queriesData.length) return <p style={{ margin: "0px" }}></p>;
 
   return (

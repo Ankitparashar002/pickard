@@ -121,14 +121,10 @@ const OrganicContentPage = ({
     );
   }
 
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
   // Calculate the total clicks to derive percentages
   const totalClicks = queriesData.reduce((acc, item) => acc + item.click, 0);
 
+  if (!queriesData.length) return <p style={{ margin: "0px" }}></p>;
   return (
     <div className={`${style.Orgnaic_content_box}`}>
       <h5 className={`${style.Organic_Content_data_title}`}>

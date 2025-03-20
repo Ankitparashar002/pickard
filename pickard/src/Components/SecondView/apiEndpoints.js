@@ -1,6 +1,5 @@
 const apiEndpoints = [
-  // { id: 1, apiurl: "RunReport", url: "GetVisitorReport", title: "VisitorReport" },
-  // { id: 2, apiurl: "RunReport", url: "GetTopChannelData", title: "TopChannelData" },
+
   { id: 1, apiurl: "UserReport", url: "GetGenderData", title: "GenderData" },
   { id: 2, apiurl: "UserReport", url: "GetAgeData", title: "AgeData" },
   { id: 3, apiurl: "UserReport", url: "GetDeviceTypeData", title: "DeviceType" },

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "/src/App.css";
+import style from "./DatePicker.module.css";
 
 const DateRangePicker = ({
   startDate: initialStartDate,
@@ -21,7 +22,6 @@ const DateRangePicker = ({
       year: "numeric",
     })}`
   );
-  const [showBy, setShowBy] = useState("Day");
   const [startDate, setStartDate] = useState(initialStartDate);
   const [endDate, setEndDate] = useState(initialEndDate);
 
@@ -43,8 +43,6 @@ const DateRangePicker = ({
     "Fixed period",
   ];
 
-  const showByOptions = ["Day", "Week", "Month"];
-
   // Update local state when props change
   useEffect(() => {
     setStartDate(initialStartDate);
@@ -62,9 +60,8 @@ const DateRangePicker = ({
     );
   }, [initialStartDate, initialEndDate]);
 
-  // Call API on initial load
-  useEffect(() => {}, [startDate, endDate]);
-
+  // Compute the new date range based on the selected period
+  // but do not update the parent state or close the modal yet.
   const calculateDateRange = (period) => {
     const today = new Date();
     let start, end;
@@ -148,32 +145,21 @@ const DateRangePicker = ({
         return;
     }
 
+    // Update local state with the computed dates.
     setStartDate(start);
     setEndDate(end);
-    setDisplayText(
-      `${start.toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      })} - ${end.toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      })}`
-    );
-    setIsOpen(false);
-    // Update parent state
-    onDateChange(start, end);
-    // Call API with new dates
+    // Note: We no longer update displayText or call onDateChange here.
   };
 
   const handlePeriodSelect = (period) => {
     setSelectedPeriod(period);
     if (period !== "Fixed period") {
+      // Compute the new dates but do not apply them until VIEW PERIOD is clicked.
       calculateDateRange(period);
     }
   };
 
+  // When the VIEW PERIOD button is clicked, apply the changes.
   const handleSubmit = () => {
     if (startDate && endDate) {
       if (startDate.getTime() === endDate.getTime()) {
@@ -184,6 +170,7 @@ const DateRangePicker = ({
         alert("Start date cannot be after end date");
         return;
       }
+      // Now update the display text and apply the new dates.
       setDisplayText(
         `${startDate.toLocaleDateString("en-US", {
           month: "long",
@@ -196,9 +183,8 @@ const DateRangePicker = ({
         })}`
       );
       setIsOpen(false);
-      // Update parent state
+      // Pass the updated dates to the parent component.
       onDateChange(startDate, endDate);
-      // Call API with custom dates
     }
   };
 
@@ -224,10 +210,8 @@ const DateRangePicker = ({
       })}`
     );
     setSelectedPeriod("Year to Date");
-    setShowBy("Day");
-    // Update parent state
+    // Pass the default dates back to the parent.
     onDateChange(defaultStart, defaultEnd);
-    // Call API with default dates
   };
 
   return (
@@ -238,10 +222,10 @@ const DateRangePicker = ({
         onClick={() => setIsOpen(!isOpen)}
         readOnly
         style={{
-          width: "360px",
+          width: "426px",
           padding: "8px",
           border: "1px solid #ccc",
-          borderRadius: "4px",
+          borderRadius: "2px",
           fontSize: "14px",
           cursor: "pointer",
           fontWeight: "bold",
@@ -249,13 +233,19 @@ const DateRangePicker = ({
       />
 
       {isOpen && (
-        <div className="date-range-picker-modal">
-          <div className="section">
+        <div
+          className={`${style.date_range_picker_modal} date-range-picker-modal`}
+        >
+          <div className={`${style.modal_header} `}>
             <label className="label">PERIOD</label>
             <select
               value={selectedPeriod}
               onChange={(e) => handlePeriodSelect(e.target.value)}
-              style={{ width: "100%", padding: "5px" }}
+              style={{
+                width: "100%",
+                padding: "5px",
+                border: "1px solid #c3c8cc",
+              }}
             >
               {periods.map((period) => (
                 <option key={period} value={period}>
@@ -294,11 +284,14 @@ const DateRangePicker = ({
             </div>
           )}
 
-          <div className="button-container">
-            <button className="cancel-button" onClick={handleCancel}>
-              CANCEL
+          <div className={`${style.button_container}`}>
+            <button className={`${style.cancel_button}`} onClick={handleCancel}>
+              Cancel
             </button>
-            <button className="view-button" onClick={handleSubmit}>
+            <button
+              className={`${style.view_period_button} `}
+              onClick={handleSubmit}
+            >
               VIEW PERIOD
             </button>
           </div>

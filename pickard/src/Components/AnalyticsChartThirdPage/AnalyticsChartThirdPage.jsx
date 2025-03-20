@@ -217,9 +217,6 @@ const AnalyticsChartThirdPage = ({
     );
   }
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
   if (!queriesData.length) return <p style={{ margin: "0px" }}></p>;
 
   return (
@@ -232,7 +229,9 @@ const AnalyticsChartThirdPage = ({
             {title.toUpperCase()}
           </p>
           {/* Left column: Donut Chart */}
-          <div className="col-md-3 d-flex justify-content-center align-items-center">
+          <div
+            className={`${style.doughnut_chart} col-md-3 d-flex justify-content-center align-items-center `}
+          >
             <div style={{ width: "170px", height: "170px" }}>
               <Doughnut
                 ref={chartRef}

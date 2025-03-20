@@ -8,6 +8,17 @@
   box-shadow: 0 0 5px 0 #3649534d;
 }
 
+.analytic_Table_sub_heading {
+  font-size: 12px;
+  color: #2d3e4f;
+  letter-spacing: 0.684px;
+}
+
+.doughnut_chart {
+  padding: 35px 35px 0px 35px;
+}
+
+
 .item_clicks {
   font-weight: 500;
   font-size: 14px;

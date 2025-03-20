@@ -12,7 +12,7 @@ const AnalyticsHeader = ({ startDate, endDate, onDateChange, title }) => {
         <div className="container d-flex justify-content-between align-items-center">
           <div className="col col-md-3">
             <img
-              src="../src/assets/image/logo.png"
+              src="https://i.postimg.cc/28NfJd7c/logo.png"
               alt=""
               style={{ width: "98%" }}
             />
