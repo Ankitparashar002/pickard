@@ -1,0 +1,151 @@
+/* SocialMediaIntegrations.css */
+.container {
+  background-color: #f4f4f4;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.search-box {
+  width: 100%;
+  padding: 8px 8px 8px 18px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  border-radius: 14px;
+}
+
+.search-box::placeholder {
+  color: #888;
+  font-style: italic;
+}
+
+.integration-list {
+  background: white;
+  padding: 10px;
+  border-radius: 15px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  min-height: 430px;
+}
+
+.connected-list {
+  background: white;
+  padding: 10px;
+  border-radius: 15px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  min-height: 480px;
+}
+
+.integration-item,
+.connected-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.integration-item:hover,
+.connected-item:hover {
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+.add-btn,
+.remove-btn,
+.details-btn {
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 7px;
+  width: 100px;
+  margin-left: 5px;
+}
+
+.add-btn {
+  background-color: #007bff;
+  color: white;
+  width: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-btn:hover {
+  background-color: #0056b3;
+}
+
+.details-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.details-btn:hover {
+  background-color: #218838;
+}
+
+.remove-btn {
+  background-color: #ff4d4d;
+  color: white;
+}
+
+.remove-btn:hover {
+  background-color: #cc0000;
+}
+
+.button-group {
+  display: flex;
+  gap: 5px;
+}
+
+.red-icon {
+  color: red;
+}
+
+.orange-icon {
+  color: orange;
+}
+
+.yellow-icon {
+  color: gold;
+}
+
+.blue-icon {
+  color: blue;
+}
+
+.black-icon {
+  color: black;
+}
+
+.no-result-item {
+  text-align: center;
+  font-size: 16px;
+  color: red;
+  font-weight: bold;
+  padding: 10px;
+  list-style-type: none;
+}
+
+.noResult {
+  padding-top: 30%;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

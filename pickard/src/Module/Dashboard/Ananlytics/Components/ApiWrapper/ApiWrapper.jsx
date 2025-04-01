@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import AnalyticsChart from "../../Module/Dashboard/Ananlytics/Components/AnanlyticsChart/AnalyticsChart";
-import PagePathView from "../../../../Components/PagePathView/PagePathView";
+import AnalyticsChart from "../AnanlyticsChart/AnalyticsChart";
+import PagePathView from "../../../AnanlyticsLandingPage/Components/PagePathView/PagePathView";
 import apiEndpoints from "./apiEndpoints";
-import AnalyticsHeader from "../../../Navbar/Components/AnanlyticsHeader/AnalyticsHeader";
+import AnalyticsHeader from "../../../../Navbar/Components/AnanlyticsHeader/AnalyticsHeader";
 function ApiWrapper() {
   // Initialize state for startDate and endDate
   const [startDate, setStartDate] = useState(
