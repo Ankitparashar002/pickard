@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "./LoginPage.module.css";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   // Removed confirmPassword since it wasn’t used in the form
@@ -10,6 +11,7 @@ const LoginPage = () => {
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isSubmitting) {
@@ -28,16 +30,13 @@ const LoginPage = () => {
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
 
     if (!values.email) {
-      errors.email = "Email is required";
+      errors.email = "Please enter a valid email address.";
     } else if (!emailRegex.test(values.email)) {
       errors.email = "Invalid email format";
     }
 
     if (!values.password) {
-      errors.password = "Password is required";
-    } else if (!passwordRegex.test(values.password)) {
-      errors.password =
-        "Password must be at least 8 characters with uppercase, lowercase, number, and special character";
+      errors.password = "Please enter a valid password.";
     }
     return errors;
   };
@@ -50,19 +49,47 @@ const LoginPage = () => {
     }));
   };
 
-  const handleBlur = (e) => {
-    const { name } = e.target;
-    setTouched((prev) => ({
-      ...prev,
-      [name]: true,
-    }));
-    setErrors(validate(formData));
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors(validate(formData));
-    setIsSubmitting(true);
+    setTouched({
+      email: true,
+      password: true,
+    });
+
+    const validationErrors = validate(formData);
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length === 0) {
+      setIsSubmitting(true);
+      try {
+        const response = await fetch(
+          "https://localhost:7050/api/UserLogin/login",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          }
+        );
+
+        const responseData = await response.json(); // Get response body
+
+        if (!response.ok) {
+          throw new Error(responseData.message || "Invalid email or password.");
+        }
+
+        console.log("Login successful:", responseData);
+        navigate("/");
+      } catch (error) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          submit: error.message, // Store the error message from backend
+        }));
+      } finally {
+        setIsSubmitting(false);
+      }
+    }
   };
 
   return (
@@ -83,7 +110,6 @@ const LoginPage = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              onBlur={handleBlur}
               placeholder="Email"
               className={`${styles.input} ${
                 errors.email && touched.email ? styles.inputError : ""
@@ -99,7 +125,6 @@ const LoginPage = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              onBlur={handleBlur}
               placeholder="Password"
               className={`${styles.input} ${
                 errors.password && touched.password ? styles.inputError : ""
@@ -119,6 +144,9 @@ const LoginPage = () => {
               Sign In
             </button>
           </div>
+          {errors.submit && (
+            <span className={styles.error}>{errors.submit}</span>
+          )}
         </form>
         <div className={styles.loginLink}>
           Don’t have an account?{" "}

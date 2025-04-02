@@ -88,8 +88,9 @@
 }
 
 .error {
+  text-align: start;
   display: block;
-  margin-top: 4px;
+  margin-top: 14px;
   font-size: 14px;
   color: #ef4444;
   -webkit-transform: scale(1) skewY(2.5deg) translateZ(0);

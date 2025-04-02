@@ -12,6 +12,7 @@ import NewGoogleLogin from "./Module/Login/NewGoogleLogin";
 import LoginPage from "./Pages/LoginPage/LoginPage.jsx";
 import SignupPage from "./Pages/SignUpPage/SignUpPage.jsx";
 import ForgetPassword from "./Pages/ForgetPassword/ForgetPassword.jsx";
+import ResetPassword from "./Pages/ForgetPassword/ResetPassword.jsx";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -95,6 +96,7 @@ function App() {
             <Route path="/login" element={<LoginPage />}></Route>
             <Route path="/signup" element={<SignupPage />}></Route>
             <Route path="/forgetpassword" element={<ForgetPassword />}></Route>
+            <Route path="/resetpassword" element={<ResetPassword />}></Route>
             <Route
               path="/socialmediaintegration"
               element={<SocialMediaIntegrations />}

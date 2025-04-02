@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import style from "./SignUpPage.module.css";
+import { useNavigate } from "react-router-dom";
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +15,7 @@ const SignupPage = () => {
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isSubmitting && Object.keys(errors).length === 0) {
@@ -31,30 +33,32 @@ const SignupPage = () => {
       /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
     const phoneRegex = /^[+]?[(]?[0-9]{1,4}[)]?[-\s\./0-9]*$/;
 
-    if (!values.firstName) errors.firstName = "First name is required";
-    if (!values.lastName) errors.lastName = "Last name is required";
-    if (!values.companyWebsite) {
-      errors.companyWebsite = "Company website is required";
-    } else if (!urlRegex.test(values.companyWebsite)) {
-      errors.companyWebsite = "Invalid website URL";
-    }
-    if (!values.phone) {
-      errors.phone = "Phone number is required";
-    } else if (!phoneRegex.test(values.phone)) {
-      errors.phone = "Invalid phone number";
-    }
+    if (!values.firstName) errors.firstName = "Please enter your first name.";
+    if (!values.lastName) errors.lastName = "Please enter your last name.";
+    // if (!values.companyWebsite) {
+    //   errors.companyWebsite = "Company website is required";
+    // } else if (!urlRegex.test(values.companyWebsite)) {
+    //   errors.companyWebsite = "Invalid website URL";
+    // }
+    // if (!values.phone) {
+    //   errors.phone = "Phone number is required";
+    // } else if (!phoneRegex.test(values.phone)) {
+    //   errors.phone = "Invalid phone number";
+    // }
     if (!values.businessEmail) {
-      errors.businessEmail = "Email is required";
+      errors.businessEmail = "Please enter a valid email address";
     } else if (!emailRegex.test(values.businessEmail)) {
       errors.businessEmail = "Invalid email format";
     }
     if (!values.password) {
-      errors.password = "Password is required";
+      errors.password = "Please enter a valid password.";
     } else if (!passwordRegex.test(values.password)) {
       errors.password =
         "Password must be at least 8 characters with uppercase, lowercase, number, and special character";
     }
-    if (!values.acceptTerms) errors.acceptTerms = "You must accept the terms";
+    if (!values.acceptTerms)
+      errors.acceptTerms =
+        "You must accept EA Technologies' Terms of Service & Privacy Policy in order to create an account.";
     return errors;
   };
 
@@ -66,16 +70,60 @@ const SignupPage = () => {
     }));
   };
 
-  const handleBlur = (e) => {
-    const { name } = e.target;
-    setTouched((prev) => ({ ...prev, [name]: true }));
-    setErrors(validate(formData));
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors(validate(formData));
-    setIsSubmitting(true);
+    setTouched({
+      firstName: true,
+      lastName: true,
+      companyWebsite: true,
+      phone: true,
+      businessEmail: true,
+      password: true,
+      acceptTerms: true,
+    });
+    const validationErrors = validate(formData);
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length === 0) {
+      setIsSubmitting(true);
+      try {
+        const response = await fetch(
+          "https://localhost:7050/api/UserLogin/signup",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          }
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Signup failed");
+        }
+
+        const data = await response.json();
+        console.log("Signup successful:", data);
+        setFormData({
+          firstName: "",
+          lastName: "",
+          companyWebsite: "",
+          phone: "",
+          businessEmail: "",
+          password: "",
+          acceptTerms: false,
+        });
+        setErrors({}); // Clear validation errors
+        setTouched({});
+        navigate("/login");
+      } catch (error) {
+        console.error("Error:", error);
+        setErrors({ ...errors, submit: error.message }); // Add server error state
+      } finally {
+        setIsSubmitting(false);
+      }
+    }
   };
 
   return (
@@ -156,7 +204,6 @@ const SignupPage = () => {
                       placeholder="First Name"
                       value={formData.firstName}
                       onChange={handleChange}
-                      onBlur={handleBlur}
                     />
                     {errors.firstName && touched.firstName && (
                       <div className={`${style.error} invalid-feedback`}>
@@ -174,7 +221,6 @@ const SignupPage = () => {
                       placeholder="Last Name"
                       value={formData.lastName}
                       onChange={handleChange}
-                      onBlur={handleBlur}
                     />
                     {errors.lastName && touched.lastName && (
                       <div className={`${style.error} invalid-feedback`}>
@@ -196,7 +242,6 @@ const SignupPage = () => {
                     placeholder="Company Website"
                     value={formData.companyWebsite}
                     onChange={handleChange}
-                    onBlur={handleBlur}
                   />
                   {errors.companyWebsite && touched.companyWebsite && (
                     <div className={`${style.error} invalid-feedback`}>
@@ -215,7 +260,6 @@ const SignupPage = () => {
                     placeholder="Phone Number"
                     value={formData.phone}
                     onChange={handleChange}
-                    onBlur={handleBlur}
                   />
                   {errors.phone && touched.phone && (
                     <div className={`${style.error} invalid-feedback`}>
@@ -236,7 +280,6 @@ const SignupPage = () => {
                     placeholder="Business Email"
                     value={formData.businessEmail}
                     onChange={handleChange}
-                    onBlur={handleBlur}
                   />
                   {errors.businessEmail && touched.businessEmail && (
                     <div className={`${style.error} invalid-feedback`}>
@@ -255,7 +298,6 @@ const SignupPage = () => {
                     placeholder="Password"
                     value={formData.password}
                     onChange={handleChange}
-                    onBlur={handleBlur}
                   />
                   {errors.password && touched.password && (
                     <div className={`${style.error} invalid-feedback`}>
@@ -277,7 +319,6 @@ const SignupPage = () => {
                     className="form-check-input"
                     checked={formData.acceptTerms}
                     onChange={handleChange}
-                    onBlur={handleBlur}
                   />
                   <label className="form-check-label">
                     I accept the <a href="#">terms and conditions.</a>
@@ -289,8 +330,12 @@ const SignupPage = () => {
                   )}
                 </div>
 
-                <button type="submit" className={style.submitBtn}>
-                  START FREE TRIAL NOW
+                <button
+                  type="submit"
+                  className={style.submitBtn}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Submitting..." : "START FREE TRIAL NOW"}
                 </button>
 
                 <div className={style.loginLink}>
